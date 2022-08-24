@@ -19,11 +19,18 @@ RUN apt-get update \
 	openssl unzip \
 	wget \
 	zlib1g-dev \
-	git
+	git \
+	automake \
+	autoconf \
+	libtool
 
 # Lua build
 COPY ./scripts/build-lua /tmp/build-lua
 RUN /tmp/build-lua
+
+# Brotli build
+COPY ./scripts/build-brotli /tmp/build-brotli
+RUN sh /tmp/build-brotli
 
 # Nginx build
 COPY ./scripts/build-openresty /tmp/build-openresty
@@ -87,6 +94,7 @@ ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
 RUN apt-get update \
 	&& apt-get install -y gcc make socat git \
 	&& /tmp/install-lua \
+	&& /tmp/build-brotli \	
 	&& /tmp/install-openresty \
 	&& apt-get remove -y make gcc git wget gettext \
 	&& apt-get autoremove -y \

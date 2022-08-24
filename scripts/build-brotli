@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+BLUE='\E[1;34m'
+CYAN='\E[1;36m'
+YELLOW='\E[1;33m'
+GREEN='\E[1;32m'
+RESET='\E[0m'
+
+
+echo -e "${BLUE}❯ ${CYAN}Building Brotli commit ${YELLOW}${NGX_BROTLI_COMMIT}...${RESET}"
+
+cd /tmp
+
+set NGX_BROTLI_COMMIT="bfd2885b2da4d763fed18f49216bb935223cd34b" \
+    PATH=$PATH:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin
+
+echo "Cloning brotli lib..."
+cd /tmp
+git clone https://github.com/bagder/libbrotli
+cd /tmp/libbrotli 
+echo "Make brotli lib..." 
+./autogen.sh 
+./configure 
+ls -la 
+make install 
+cd /tmp 
+echo "Cloning brotli..." 
+git clone --recursive https://github.com/google/ngx_brotli.git 
+cd ngx_brotli 
+ls -la 
+git checkout -b $NGX_BROTLI_COMMIT $NGX_BROTLI_COMMIT 
+git submodule update --init 
+ls -la 
+
+echo -e "${BLUE}❯ ${GREEN}Building Brotli build completed${RESET}"

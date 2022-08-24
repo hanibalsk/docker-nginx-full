@@ -1,4 +1,4 @@
-# nginx-full
+# nginx-full - Fork with brotli
 
 <p>
   <img src="https://img.shields.io/badge/openresty-1.19.9.1-green.svg?style=for-the-badge">
